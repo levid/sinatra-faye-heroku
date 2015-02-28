@@ -1,4 +1,5 @@
 source 'http://rubygems.org'
 ruby '2.0.0'
 gem 'faye'
+gem 'faye-redis'
 gem 'thin'
