@@ -2,6 +2,7 @@ require 'rubygems'
 require 'bundler'
 Bundler.require
 require 'faye'
+require 'faye/redis'
 
 require File.expand_path('../config/initializers/faye_token.rb', __FILE__)
 
@@ -16,15 +17,12 @@ class ServerAuth
   end
 end
 
-uri = URI.parse(ENV['REDISTOGO_URL'])
 faye_server = Faye::RackAdapter.new(
 			:mount => '/faye', 
 			:timeout => 25,
 			:engine => {
-				:type => 'redis',
-				:host => uri.host || 'localhost',
-				:port => uri.port || 6379,
-				:password => uri.password || '',
+				:type => Faye::Redis,
+				:uri => ENV['REDISTOGO_URL'] || 'redis://127.0.0.1:6379',
 				:database => 1
 			})
 faye_server.add_extension(ServerAuth.new)
